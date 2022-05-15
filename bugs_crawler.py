@@ -52,51 +52,51 @@ chart_f.close()
 # 이제 부터는 학생2가 학생1이 작성한 파일에서 크롤러 프로그램을 발전시킵니다.
 # 꼭 학생1이 작성한 코드 밑에서 시작할 필요 없으며 학생1이 작성한 코드를 수정해도 됩니다.
 
-# print("---- End of List ----")
-# print("")
-# song_ranking=input("찾으시는 곡에 대한 현재 순위를 입력해주세요 > ")
-# song_to_find=real_time_song_ranking[song_ranking]
+print("---- End of List ----")
+print("")
+song_ranking=input("찾으시는 곡에 대한 현재 순위를 입력해주세요 > ")
+song_to_find=real_time_song_ranking[song_ranking]
 
-# url_list_by_timeline=[]
-# for time in range(0,22) : ## 00시 부터 21시(오후 9시)까지
-#     url_list_by_timeline.append(f"https://music.bugs.co.kr/chart/track/realtime/total?chartdate=20210504&charthour={time:02d}")
-#     sleep(2) # 만약의 이상탐지에 걸리는 것을 미연에 방지하기 위해 2+a 초 간의 간격을 두고 접속함.
+url_list_by_timeline=[]
+for time in range(0,22) : ## 00시 부터 21시(오후 9시)까지
+    url_list_by_timeline.append(f"https://music.bugs.co.kr/chart/track/realtime/total?chartdate=20210504&charthour={time:02d}")
+    sleep(2) # 만약의 이상탐지에 걸리는 것을 미연에 방지하기 위해 2+a 초 간의 간격을 두고 접속함.
 
-# song_ranking_fluctuation=dict()
-# song_ranking_fluctuation['title']=song_to_find
-# song_ranking_fluctuation['ranking_by_time']=dict()
-# time_count=0
-# for time_url in url_list_by_timeline :
-#     html = urlopen(time_url)
+song_ranking_fluctuation=dict()
+song_ranking_fluctuation['title']=song_to_find
+song_ranking_fluctuation['ranking_by_time']=dict()
+time_count=0
+for time_url in url_list_by_timeline :
+    html = urlopen(time_url)
 
-#     soup = BeautifulSoup(html, "lxml")
+    soup = BeautifulSoup(html, "lxml")
 
-#     song_chart_table = soup.find_all('table', {"class": "byChart"})
-#     song_chart_table_tbody = song_chart_table[0].find_all("tbody")
-#     song_chart_table_tbody_row = song_chart_table_tbody[0].find_all("tr")
+    song_chart_table = soup.find_all('table', {"class": "byChart"})
+    song_chart_table_tbody = song_chart_table[0].find_all("tbody")
+    song_chart_table_tbody_row = song_chart_table_tbody[0].find_all("tr")
 
-#     for song_row in song_chart_table_tbody_row:
-#         title_p = song_row.find_all("p", {"class": "title"})
-#         title_text = title_p[0].get_text()
-#         if title_text.strip()==song_to_find:
-#             ranking_div = song_row.find_all("div", {"class": "ranking"})
-#             ranking_strong = ranking_div[0].find_all("strong")
-#             ranking_text = ranking_strong[0].get_text()
-#             #print(ranking_text)
-#             song_ranking_fluctuation['ranking_by_time'][f'{time_count:02d}']=ranking_text
-#             break
-#     if not f'{time_count:02d}' in song_ranking_fluctuation['ranking_by_time'].keys() : #만약 차트에서 검색되지 않았다면 100위
-#         song_ranking_fluctuation['ranking_by_time'][f'{time_count:02d}'] = "100"
-#     time_count += 1
+    for song_row in song_chart_table_tbody_row:
+        title_p = song_row.find_all("p", {"class": "title"})
+        title_text = title_p[0].get_text()
+        if title_text.strip()==song_to_find:
+            ranking_div = song_row.find_all("div", {"class": "ranking"})
+            ranking_strong = ranking_div[0].find_all("strong")
+            ranking_text = ranking_strong[0].get_text()
+            #print(ranking_text)
+            song_ranking_fluctuation['ranking_by_time'][f'{time_count:02d}']=ranking_text
+            break
+    if not f'{time_count:02d}' in song_ranking_fluctuation['ranking_by_time'].keys() : #만약 차트에서 검색되지 않았다면 100위
+        song_ranking_fluctuation['ranking_by_time'][f'{time_count:02d}'] = "100"
+    time_count += 1
 
-# print("["+song_ranking_fluctuation['title']+"]의 00시 부터 21시 까지 순위 변동사항 입니다. :")
-# time_line=[]
-# ranking_seq=[]
+print("["+song_ranking_fluctuation['title']+"]의 00시 부터 21시 까지 순위 변동사항 입니다. :")
+time_line=[]
+ranking_seq=[]
 
-# want_f = open(f'./ranking_{song_ranking}.txt','w')
-# for time, ranking in song_ranking_fluctuation['ranking_by_time'].items() :
-#     print(time,"시 -",ranking,"위")
-#     want_f.write(f'{time} 시 - {ranking} 위 \n')
+want_f = open(f'./ranking_{song_ranking}.txt','w')
+for time, ranking in song_ranking_fluctuation['ranking_by_time'].items() :
+    print(time,"시 -",ranking,"위")
+    want_f.write(f'{time} 시 - {ranking} 위 \n')
 
 
 # 여기까지 학생2가 작성하고 인풋에 입력할 수 있는 모습을 캡쳐, 그래프 캡쳐 한 뒤, git에 업로드
